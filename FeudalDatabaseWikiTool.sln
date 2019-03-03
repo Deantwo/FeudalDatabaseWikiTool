@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.10
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeudalDatabaseWikiTool", "FeudalDatabaseWikiTool\FeudalDatabaseWikiTool.csproj", "{0945E97C-9844-4501-A4CF-51A97CF1DD5A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeudalDatabase", "FeudalDatabase\FeudalDatabase.csproj", "{8D25151D-ECAF-4F1A-BE15-0150E86A8A5B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0945E97C-9844-4501-A4CF-51A97CF1DD5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0945E97C-9844-4501-A4CF-51A97CF1DD5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0945E97C-9844-4501-A4CF-51A97CF1DD5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0945E97C-9844-4501-A4CF-51A97CF1DD5A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D25151D-ECAF-4F1A-BE15-0150E86A8A5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D25151D-ECAF-4F1A-BE15-0150E86A8A5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D25151D-ECAF-4F1A-BE15-0150E86A8A5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D25151D-ECAF-4F1A-BE15-0150E86A8A5B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4A26AE38-0C2C-47ED-99F1-A2D0D7BCE7CB}
+	EndGlobalSection
+EndGlobal
