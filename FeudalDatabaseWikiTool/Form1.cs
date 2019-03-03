@@ -1,4 +1,5 @@
-﻿using FeudalDatabase;
+﻿#define SkillXmlBroken
+using FeudalDatabase;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -23,26 +24,25 @@ namespace FeudalDatabaseWikiTool
         {
             InitializeComponent();
 
-#if !SkillXmlBroken
-#else
+#if SkillXmlBroken
             _skill_types = new Dictionary<int, FeudalSkill>();
             _skill_types.Add(1, new FeudalSkill() { Name = "Artisan", ID = 1 });
             _skill_types.Add(2, new FeudalSkill() { Name = "Mining", ID = 2 });
-            _skill_types.Add(3, new FeudalSkill() { Name = "Smelting", ID = 3 });
-            _skill_types.Add(4, new FeudalSkill() { Name = "Forging", ID = 4 });
+            _skill_types.Add(3, new FeudalSkill() { Name = "Forging", ID = 3 });
+            _skill_types.Add(4, new FeudalSkill() { Name = "Weaponsmithing", ID = 4 });
             _skill_types.Add(5, new FeudalSkill() { Name = "Armorsmithing", ID = 5 });
             _skill_types.Add(6, new FeudalSkill() { Name = "Forestry", ID = 6 });
             _skill_types.Add(7, new FeudalSkill() { Name = "Building Maintain", ID = 7 });
             _skill_types.Add(8, new FeudalSkill() { Name = "Carpentry", ID = 8 });
             _skill_types.Add(9, new FeudalSkill() { Name = "Bowcraft", ID = 9 });
             _skill_types.Add(10, new FeudalSkill() { Name = "Warfare engineering", ID = 10 });
-            _skill_types.Add(11, new FeudalSkill() { Name = "Nature's Lore", ID = 11 });
+            _skill_types.Add(11, new FeudalSkill() { Name = "Gathering", ID = 11 });
             _skill_types.Add(12, new FeudalSkill() { Name = "Herbalism", ID = 12 });
             _skill_types.Add(13, new FeudalSkill() { Name = "Brewing", ID = 13 });
             _skill_types.Add(14, new FeudalSkill() { Name = "Healing", ID = 14 });
             _skill_types.Add(15, new FeudalSkill() { Name = "Alchemy", ID = 15 });
-            _skill_types.Add(16, new FeudalSkill() { Name = "Digging", ID = 16 });
-            _skill_types.Add(17, new FeudalSkill() { Name = "Materials Preparation", ID = 17 });
+            _skill_types.Add(16, new FeudalSkill() { Name = "Materials Processing", ID = 16 });
+            _skill_types.Add(17, new FeudalSkill() { Name = "Kilning", ID = 17 });
             _skill_types.Add(18, new FeudalSkill() { Name = "Construction", ID = 18 });
             _skill_types.Add(19, new FeudalSkill() { Name = "Masonry", ID = 19 });
             _skill_types.Add(20, new FeudalSkill() { Name = "Architecture", ID = 20 });
@@ -53,7 +53,7 @@ namespace FeudalDatabaseWikiTool
             _skill_types.Add(25, new FeudalSkill() { Name = "Tailoring", ID = 25 });
             _skill_types.Add(26, new FeudalSkill() { Name = "Warhorse training", ID = 26 });
             _skill_types.Add(31, new FeudalSkill() { Name = "Precious Prospecting", ID = 31 });
-            _skill_types.Add(32, new FeudalSkill() { Name = "Advanced Farming", ID = 32 });
+            _skill_types.Add(32, new FeudalSkill() { Name = "Household", ID = 32 });
             _skill_types.Add(48, new FeudalSkill() { Name = "Archer", ID = 48 });
             _skill_types.Add(49, new FeudalSkill() { Name = "Ranger", ID = 49 });
             _skill_types.Add(51, new FeudalSkill() { Name = "Hunting", ID = 51 });
@@ -67,6 +67,7 @@ namespace FeudalDatabaseWikiTool
             _skill_types.Add(63, new FeudalSkill() { Name = "Horseback riding", ID = 63 });
             _skill_types.Add(64, new FeudalSkill() { Name = "Swimming", ID = 64 });
             _skill_types.Add(65, new FeudalSkill() { Name = "Authority", ID = 65 });
+#else
 #endif
         }
 
@@ -83,7 +84,7 @@ namespace FeudalDatabaseWikiTool
 #endif
             lblBrowsePath.Text = _folderGame;
 
-#if SkillXmlBroken
+#if !SkillXmlBroken
             _skill_types = FeudalSkill.ReadAll(_folderGame);
 #endif
             _objects_types = FeudalObject.ReadAll(_folderGame);
@@ -115,7 +116,7 @@ namespace FeudalDatabaseWikiTool
         }
 
 
-#region DataGridView ContextMenu RightClick
+        #region DataGridView ContextMenu RightClick
         private void dgvDatabase_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
         { // Based on: http://stackoverflow.com/questions/1718389/right-click-context-menu-for-datagrid.
             if (e.ColumnIndex != -1 && e.RowIndex != -1 && e.Button == System.Windows.Forms.MouseButtons.Right)
@@ -192,7 +193,7 @@ namespace FeudalDatabaseWikiTool
                 }
             }
         }
-#endregion
+        #endregion
 
         private void cmsRightClickItemTemplate_Click(object sender, EventArgs e)
         { // http://stackoverflow.com/questions/4886327/determine-what-control-the-contextmenustrip-was-used-on
@@ -246,7 +247,6 @@ namespace FeudalDatabaseWikiTool
                 infobox += $@"{Environment.NewLine}{lineHeader}skill = {OnlyFirstLetterCapitalized(_skill_types[recipes[r].SkillTypeID].Name)}
 {lineHeader}minskilllevel = {recipes[r].SkillLvl}
 {lineHeader}skilldepends = {recipes[r].SkillDepends}
-{lineHeader}requiredtool = {(recipes[r].StartingToolsID != 0 ? OnlyFirstLetterCapitalized(_objects_types[recipes[r].StartingToolsID].Name) : "")}
 {lineHeader}blueprint = {(recipes[r].IsBlueprint ? "1" : "")}
 {lineHeader}quantity = {recipes[r].Quantity}
 {lineHeader}duration = ";
@@ -306,7 +306,6 @@ namespace FeudalDatabaseWikiTool
                 infobox += $@"{Environment.NewLine}{lineHeader}skill = {OnlyFirstLetterCapitalized(_skill_types[recipes[r].SkillTypeID].Name)}
 {lineHeader}minskilllevel = {recipes[r].SkillLvl}
 {lineHeader}skilldepends = {recipes[r].SkillDepends}
-{lineHeader}requiredtool = {(recipes[r].StartingToolsID != 0 ? OnlyFirstLetterCapitalized(_objects_types[recipes[r].StartingToolsID].Name) : "")}
 {lineHeader}duration = ";
             }
 
@@ -315,7 +314,7 @@ namespace FeudalDatabaseWikiTool
             textBox1.Text = infobox;
         }
 
-#region DataGridView
+        #region DataGridView
         private void dgvDatabase_SortCompare(object sender, DataGridViewSortCompareEventArgs e)
         { // Override of the DataGridView's normal SortCompare. This version converts some of the fields to numbers before sorting them.
             DataGridView dgv = (sender as DataGridView);
@@ -371,7 +370,7 @@ namespace FeudalDatabaseWikiTool
         {
             return Math.Sign(value1.CompareTo(value2));
         }
-#endregion
+        #endregion
 
         private string OnlyFirstLetterCapitalized(string s)
         {
