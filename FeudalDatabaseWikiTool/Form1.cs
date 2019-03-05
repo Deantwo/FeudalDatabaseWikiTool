@@ -20,6 +20,8 @@ namespace FeudalDatabaseWikiTool
         Dictionary<int, FeudalRecipe> _recipes;
         Dictionary<int, FeudalRecipeRequirement> _recipe_requirements;
 
+        List<FeudalObject> _tableList;
+
         public Form1()
         {
             InitializeComponent();
@@ -91,30 +93,44 @@ namespace FeudalDatabaseWikiTool
             _recipes = FeudalRecipe.ReadAll(_folderGame);
             _recipe_requirements = FeudalRecipeRequirement.ReadAll(_folderGame);
 
-            List<FeudalObject> testlist = new List<FeudalObject>();
-            foreach (FeudalObject objects_type in _objects_types.Values)
-            {
-                testlist.Add(objects_type);
+            _tableList = _objects_types.Values.ToList();
+            dgvDatabase.DataSource = _tableList;
 
-                //IEnumerable<FeudalRecipe> matching_recipes = recipes.Values.Where(x => x.ResultObjectTypeID == objects_type.ID);
-                //foreach (FeudalRecipe matching_recipe in matching_recipes)
-                //{
-                //    TreeNode ctn = tn.Nodes.Add(matching_recipe.ID.ToString(), matching_recipe.Name);
-                //
-                //    IEnumerable<FeudalRecipeRequirement> matching_recipe_requirements = recipe_requirements.Values.Where(x => x.RecipeID == matching_recipe.ID);
-                //    foreach (FeudalRecipeRequirement matching_recipe_requirement in matching_recipe_requirements)
-                //    {
-                //        string requirement = $"{matching_recipe_requirement.Quantity} x {objects_types[matching_recipe_requirement.MaterialObjectTypeID].Name}";
-                //        if (matching_recipe_requirement.IsRegionItemRequired)
-                //            requirement += $" (Regional)";
-                //        ctn.Nodes.Add(matching_recipe_requirement.ID.ToString(), requirement);
-                //    }
-                //}
-            }
-
-            dgvDatabase.DataSource = testlist;
+            //List<FeudalObject> testlist = new List<FeudalObject>();
+            //foreach (FeudalObject objects_type in _objects_types.Values)
+            //{
+            //    testlist.Add(objects_type);
+            //
+            //    IEnumerable<FeudalRecipe> matching_recipes = recipes.Values.Where(x => x.ResultObjectTypeID == objects_type.ID);
+            //    foreach (FeudalRecipe matching_recipe in matching_recipes)
+            //    {
+            //        TreeNode ctn = tn.Nodes.Add(matching_recipe.ID.ToString(), matching_recipe.Name);
+            //
+            //        IEnumerable<FeudalRecipeRequirement> matching_recipe_requirements = recipe_requirements.Values.Where(x => x.RecipeID == matching_recipe.ID);
+            //        foreach (FeudalRecipeRequirement matching_recipe_requirement in matching_recipe_requirements)
+            //        {
+            //            string requirement = $"{matching_recipe_requirement.Quantity} x {objects_types[matching_recipe_requirement.MaterialObjectTypeID].Name}";
+            //            if (matching_recipe_requirement.IsRegionItemRequired)
+            //                requirement += $" (Regional)";
+            //            ctn.Nodes.Add(matching_recipe_requirement.ID.ToString(), requirement);
+            //        }
+            //    }
+            //}
         }
 
+        private void tbxFilter_TextChanged(object sender, EventArgs e)
+        {
+            if (tbxFilter.Text == string.Empty)
+                dgvDatabase.DataSource = _tableList;
+            else
+            {
+                int id;
+                if (int.TryParse(tbxFilter.Text, out id))
+                    dgvDatabase.DataSource = _tableList.FindAll(x => x.ID == id || x.ParentID == id);
+                else
+                    dgvDatabase.DataSource = _tableList.FindAll(x => x.Name.ToLower().Contains(tbxFilter.Text.ToLower()));
+            }
+        }
 
         #region DataGridView ContextMenu RightClick
         private void dgvDatabase_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)

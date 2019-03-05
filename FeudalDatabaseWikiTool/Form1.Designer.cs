@@ -41,6 +41,8 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.cmsRightClickItemTemplate = new System.Windows.Forms.ToolStripMenuItem();
             this.cmsRightClickBuildingTemplate = new System.Windows.Forms.ToolStripMenuItem();
+            this.tbxFilter = new System.Windows.Forms.TextBox();
+            this.lblFilter = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -72,6 +74,8 @@
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.lblFilter);
+            this.splitContainer1.Panel1.Controls.Add(this.tbxFilter);
             this.splitContainer1.Panel1.Controls.Add(this.dgvDatabase);
             // 
             // splitContainer1.Panel2
@@ -92,13 +96,13 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dgvDatabase.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.dgvDatabase.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
-            this.dgvDatabase.Location = new System.Drawing.Point(3, 3);
+            this.dgvDatabase.Location = new System.Drawing.Point(3, 29);
             this.dgvDatabase.Name = "dgvDatabase";
             this.dgvDatabase.ReadOnly = true;
             this.dgvDatabase.RowHeadersVisible = false;
             this.dgvDatabase.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.dgvDatabase.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvDatabase.Size = new System.Drawing.Size(204, 457);
+            this.dgvDatabase.Size = new System.Drawing.Size(204, 431);
             this.dgvDatabase.StandardTab = true;
             this.dgvDatabase.TabIndex = 3;
             this.dgvDatabase.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgvDatabase_CellMouseDown);
@@ -174,6 +178,23 @@
             this.cmsRightClickBuildingTemplate.Text = "Create Building Template";
             this.cmsRightClickBuildingTemplate.Click += new System.EventHandler(this.cmsRightClickBuildingTemplate_Click);
             // 
+            // tbxFilter
+            // 
+            this.tbxFilter.Location = new System.Drawing.Point(41, 3);
+            this.tbxFilter.Name = "tbxFilter";
+            this.tbxFilter.Size = new System.Drawing.Size(166, 20);
+            this.tbxFilter.TabIndex = 4;
+            this.tbxFilter.TextChanged += new System.EventHandler(this.tbxFilter_TextChanged);
+            // 
+            // lblFilter
+            // 
+            this.lblFilter.AutoSize = true;
+            this.lblFilter.Location = new System.Drawing.Point(3, 6);
+            this.lblFilter.Name = "lblFilter";
+            this.lblFilter.Size = new System.Drawing.Size(32, 13);
+            this.lblFilter.TabIndex = 3;
+            this.lblFilter.Text = "Filter:";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -186,6 +207,7 @@
             this.Name = "Form1";
             this.Text = "Form1";
             this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
@@ -210,6 +232,8 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem cmsRightClickItemTemplate;
         private System.Windows.Forms.ToolStripMenuItem cmsRightClickBuildingTemplate;
+        private System.Windows.Forms.Label lblFilter;
+        private System.Windows.Forms.TextBox tbxFilter;
     }
 }
 
