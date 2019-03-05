@@ -15,6 +15,7 @@ namespace FeudalDatabaseWikiTool
     public partial class Form1 : Form
     {
         private string _folderGame;
+        private string _folderDefaultEu = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Life is Feudal MMO", "game", "eu");
         Dictionary<int, FeudalSkill> _skill_types;
         Dictionary<int, FeudalObject> _objects_types;
         Dictionary<int, FeudalRecipe> _recipes;
@@ -75,15 +76,15 @@ namespace FeudalDatabaseWikiTool
 
         private void btnBrowseFolder_Click(object sender, EventArgs e)
         {
-#if GameFolderSelector
-            DialogResult result = folderBrowserDialog1.ShowDialog(this);
-            if (result != DialogResult.OK)
-                return;
-
-            _folderGame = folderBrowserDialog1.SelectedPath;
-#else
-            _folderGame = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Life is Feudal MMO", "game", "eu");
-#endif
+            if (System.IO.Directory.Exists(_folderDefaultEu))
+                _folderGame = _folderDefaultEu;
+            else
+            {
+                DialogResult result = folderBrowserDialog1.ShowDialog(this);
+                if (result != DialogResult.OK)
+                    return;
+                _folderGame = folderBrowserDialog1.SelectedPath;
+            }
             lblBrowsePath.Text = _folderGame;
 
 #if !SkillXmlBroken
