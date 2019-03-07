@@ -31,6 +31,8 @@
             this.components = new System.ComponentModel.Container();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.lblFilter = new System.Windows.Forms.Label();
+            this.tbxFilter = new System.Windows.Forms.TextBox();
             this.dgvDatabase = new System.Windows.Forms.DataGridView();
             this.btnBrowseFolder = new System.Windows.Forms.Button();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
@@ -41,8 +43,6 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.cmsRightClickItemTemplate = new System.Windows.Forms.ToolStripMenuItem();
             this.cmsRightClickBuildingTemplate = new System.Windows.Forms.ToolStripMenuItem();
-            this.tbxFilter = new System.Windows.Forms.TextBox();
-            this.lblFilter = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -85,6 +85,23 @@
             this.splitContainer1.SplitterDistance = 210;
             this.splitContainer1.TabIndex = 3;
             // 
+            // lblFilter
+            // 
+            this.lblFilter.AutoSize = true;
+            this.lblFilter.Location = new System.Drawing.Point(3, 6);
+            this.lblFilter.Name = "lblFilter";
+            this.lblFilter.Size = new System.Drawing.Size(32, 13);
+            this.lblFilter.TabIndex = 3;
+            this.lblFilter.Text = "Filter:";
+            // 
+            // tbxFilter
+            // 
+            this.tbxFilter.Location = new System.Drawing.Point(41, 3);
+            this.tbxFilter.Name = "tbxFilter";
+            this.tbxFilter.Size = new System.Drawing.Size(166, 20);
+            this.tbxFilter.TabIndex = 4;
+            this.tbxFilter.TextChanged += new System.EventHandler(this.tbxFilter_TextChanged);
+            // 
             // dgvDatabase
             // 
             this.dgvDatabase.AllowUserToAddRows = false;
@@ -121,7 +138,8 @@
             // 
             // folderBrowserDialog1
             // 
-            this.folderBrowserDialog1.RootFolder = System.Environment.SpecialFolder.LocalApplicationData;
+            this.folderBrowserDialog1.RootFolder = System.Environment.SpecialFolder.MyComputer;
+            this.folderBrowserDialog1.ShowNewFolderButton = false;
             // 
             // lblBrowseFolder
             // 
@@ -178,23 +196,6 @@
             this.cmsRightClickBuildingTemplate.Text = "Create Building Template";
             this.cmsRightClickBuildingTemplate.Click += new System.EventHandler(this.cmsRightClickBuildingTemplate_Click);
             // 
-            // tbxFilter
-            // 
-            this.tbxFilter.Location = new System.Drawing.Point(41, 3);
-            this.tbxFilter.Name = "tbxFilter";
-            this.tbxFilter.Size = new System.Drawing.Size(166, 20);
-            this.tbxFilter.TabIndex = 4;
-            this.tbxFilter.TextChanged += new System.EventHandler(this.tbxFilter_TextChanged);
-            // 
-            // lblFilter
-            // 
-            this.lblFilter.AutoSize = true;
-            this.lblFilter.Location = new System.Drawing.Point(3, 6);
-            this.lblFilter.Name = "lblFilter";
-            this.lblFilter.Size = new System.Drawing.Size(32, 13);
-            this.lblFilter.TabIndex = 3;
-            this.lblFilter.Text = "Filter:";
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -205,7 +206,7 @@
             this.Controls.Add(this.btnBrowseFolder);
             this.Controls.Add(this.splitContainer1);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "FeudalDatabaseWikiTool";
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);

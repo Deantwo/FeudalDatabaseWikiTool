@@ -14,8 +14,6 @@ namespace FeudalDatabaseWikiTool
 {
     public partial class Form1 : Form
     {
-        private string _folderGame;
-        private string _folderDefaultEu = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Life is Feudal MMO", "game", "eu");
         Dictionary<int, FeudalSkill> _skill_types;
         Dictionary<int, FeudalObject> _objects_types;
         Dictionary<int, FeudalRecipe> _recipes;
@@ -27,96 +25,88 @@ namespace FeudalDatabaseWikiTool
         {
             InitializeComponent();
 
-#if SkillXmlBroken
-            _skill_types = new Dictionary<int, FeudalSkill>();
-            _skill_types.Add(1, new FeudalSkill() { Name = "Artisan", ID = 1 });
-            _skill_types.Add(2, new FeudalSkill() { Name = "Mining", ID = 2 });
-            _skill_types.Add(3, new FeudalSkill() { Name = "Forging", ID = 3 });
-            _skill_types.Add(4, new FeudalSkill() { Name = "Weaponsmithing", ID = 4 });
-            _skill_types.Add(5, new FeudalSkill() { Name = "Armorsmithing", ID = 5 });
-            _skill_types.Add(6, new FeudalSkill() { Name = "Forestry", ID = 6 });
-            _skill_types.Add(7, new FeudalSkill() { Name = "Building Maintain", ID = 7 });
-            _skill_types.Add(8, new FeudalSkill() { Name = "Carpentry", ID = 8 });
-            _skill_types.Add(9, new FeudalSkill() { Name = "Bowcraft", ID = 9 });
-            _skill_types.Add(10, new FeudalSkill() { Name = "Warfare engineering", ID = 10 });
-            _skill_types.Add(11, new FeudalSkill() { Name = "Gathering", ID = 11 });
-            _skill_types.Add(12, new FeudalSkill() { Name = "Herbalism", ID = 12 });
-            _skill_types.Add(13, new FeudalSkill() { Name = "Brewing", ID = 13 });
-            _skill_types.Add(14, new FeudalSkill() { Name = "Healing", ID = 14 });
-            _skill_types.Add(15, new FeudalSkill() { Name = "Alchemy", ID = 15 });
-            _skill_types.Add(16, new FeudalSkill() { Name = "Materials Processing", ID = 16 });
-            _skill_types.Add(17, new FeudalSkill() { Name = "Kilning", ID = 17 });
-            _skill_types.Add(18, new FeudalSkill() { Name = "Construction", ID = 18 });
-            _skill_types.Add(19, new FeudalSkill() { Name = "Masonry", ID = 19 });
-            _skill_types.Add(20, new FeudalSkill() { Name = "Architecture", ID = 20 });
-            _skill_types.Add(21, new FeudalSkill() { Name = "Farming", ID = 21 });
-            _skill_types.Add(22, new FeudalSkill() { Name = "Animal lore", ID = 22 });
-            _skill_types.Add(23, new FeudalSkill() { Name = "Procuration", ID = 23 });
-            _skill_types.Add(24, new FeudalSkill() { Name = "Cooking", ID = 24 });
-            _skill_types.Add(25, new FeudalSkill() { Name = "Tailoring", ID = 25 });
-            _skill_types.Add(26, new FeudalSkill() { Name = "Warhorse training", ID = 26 });
-            _skill_types.Add(31, new FeudalSkill() { Name = "Precious Prospecting", ID = 31 });
-            _skill_types.Add(32, new FeudalSkill() { Name = "Household", ID = 32 });
-            _skill_types.Add(48, new FeudalSkill() { Name = "Archer", ID = 48 });
-            _skill_types.Add(49, new FeudalSkill() { Name = "Ranger", ID = 49 });
-            _skill_types.Add(51, new FeudalSkill() { Name = "Hunting", ID = 51 });
-            _skill_types.Add(52, new FeudalSkill() { Name = "Jewelry", ID = 52 });
-            _skill_types.Add(53, new FeudalSkill() { Name = "Arts", ID = 53 });
-            _skill_types.Add(54, new FeudalSkill() { Name = "Piety", ID = 54 });
-            _skill_types.Add(55, new FeudalSkill() { Name = "Mentoring", ID = 55 });
-            _skill_types.Add(59, new FeudalSkill() { Name = "Demolition", ID = 59 });
-            _skill_types.Add(61, new FeudalSkill() { Name = "Movement", ID = 61 });
-            _skill_types.Add(62, new FeudalSkill() { Name = "General actions", ID = 62 });
-            _skill_types.Add(63, new FeudalSkill() { Name = "Horseback riding", ID = 63 });
-            _skill_types.Add(64, new FeudalSkill() { Name = "Swimming", ID = 64 });
-            _skill_types.Add(65, new FeudalSkill() { Name = "Authority", ID = 65 });
-#else
-#endif
+            // Read the previously used folder.
+            string previousFolder = GetPreviousFolderPath();
+
+            // If there is no previously used folder, check if the default MMO AppData folder exist.
+            // Else open previously used folder.
+            if (previousFolder == string.Empty)
+            {
+                string folderDefaultAppdataEu = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Life is Feudal MMO", "game", "eu");
+                if (System.IO.Directory.Exists(folderDefaultAppdataEu))
+                    ReadGameDataFolder(folderDefaultAppdataEu);
+                // Add other possible default paths here.
+            }
+            else
+                ReadGameDataFolder(previousFolder);
         }
 
-        private void btnBrowseFolder_Click(object sender, EventArgs e)
+        private void ReadGameDataFolder(string folderPath)
         {
-            if (System.IO.Directory.Exists(_folderDefaultEu))
-                _folderGame = _folderDefaultEu;
-            else
+            if (!System.IO.Directory.Exists(folderPath))
             {
-                DialogResult result = folderBrowserDialog1.ShowDialog(this);
-                if (result != DialogResult.OK)
-                    return;
-                _folderGame = folderBrowserDialog1.SelectedPath;
+                MessageBox.Show(this, $"The game data folder could not be found:{Environment.NewLine}{folderPath}", "Folder Not Found", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
-            lblBrowsePath.Text = _folderGame;
 
-#if !SkillXmlBroken
-            _skill_types = FeudalSkill.ReadAll(_folderGame);
+            lblBrowsePath.Text = folderPath;
+            SetPreviousFolderPath(folderPath);
+
+            // Read the game data files.
+#if SkillXmlBroken
+            _skill_types = FeudalSkill.ManualList();
+#else
+            _skill_types = FeudalSkill.ReadAll(folderPath);
 #endif
-            _objects_types = FeudalObject.ReadAll(_folderGame);
-            _recipes = FeudalRecipe.ReadAll(_folderGame);
-            _recipe_requirements = FeudalRecipeRequirement.ReadAll(_folderGame);
+            _objects_types = FeudalObject.ReadAll(folderPath);
+            _recipes = FeudalRecipe.ReadAll(folderPath);
+            _recipe_requirements = FeudalRecipeRequirement.ReadAll(folderPath);
 
             _tableList = _objects_types.Values.ToList();
             dgvDatabase.DataSource = _tableList;
+        }
 
-            //List<FeudalObject> testlist = new List<FeudalObject>();
-            //foreach (FeudalObject objects_type in _objects_types.Values)
-            //{
-            //    testlist.Add(objects_type);
-            //
-            //    IEnumerable<FeudalRecipe> matching_recipes = recipes.Values.Where(x => x.ResultObjectTypeID == objects_type.ID);
-            //    foreach (FeudalRecipe matching_recipe in matching_recipes)
-            //    {
-            //        TreeNode ctn = tn.Nodes.Add(matching_recipe.ID.ToString(), matching_recipe.Name);
-            //
-            //        IEnumerable<FeudalRecipeRequirement> matching_recipe_requirements = recipe_requirements.Values.Where(x => x.RecipeID == matching_recipe.ID);
-            //        foreach (FeudalRecipeRequirement matching_recipe_requirement in matching_recipe_requirements)
-            //        {
-            //            string requirement = $"{matching_recipe_requirement.Quantity} x {objects_types[matching_recipe_requirement.MaterialObjectTypeID].Name}";
-            //            if (matching_recipe_requirement.IsRegionItemRequired)
-            //                requirement += $" (Regional)";
-            //            ctn.Nodes.Add(matching_recipe_requirement.ID.ToString(), requirement);
-            //        }
-            //    }
-            //}
+        private void SetPreviousFolderPath(string folderPath)
+        {
+            Properties.Settings.Default.FolderPrevious = folderPath;
+            Properties.Settings.Default.Save();
+        }
+        private string GetPreviousFolderPath()
+        {
+            return Properties.Settings.Default.FolderPrevious;
+        }
+
+        //private void TestDataFolder()
+        //{
+        //    List<FeudalObject> testlist = new List<FeudalObject>();
+        //    foreach (FeudalObject objects_type in _objects_types.Values)
+        //    {
+        //        testlist.Add(objects_type);
+        //    
+        //        IEnumerable<FeudalRecipe> matching_recipes = recipes.Values.Where(x => x.ResultObjectTypeID == objects_type.ID);
+        //        foreach (FeudalRecipe matching_recipe in matching_recipes)
+        //        {
+        //            TreeNode ctn = tn.Nodes.Add(matching_recipe.ID.ToString(), matching_recipe.Name);
+        //    
+        //            IEnumerable<FeudalRecipeRequirement> matching_recipe_requirements = recipe_requirements.Values.Where(x => x.RecipeID == matching_recipe.ID);
+        //            foreach (FeudalRecipeRequirement matching_recipe_requirement in matching_recipe_requirements)
+        //            {
+        //                string requirement = $"{matching_recipe_requirement.Quantity} x {objects_types[matching_recipe_requirement.MaterialObjectTypeID].Name}";
+        //                if (matching_recipe_requirement.IsRegionItemRequired)
+        //                    requirement += $" (Regional)";
+        //                ctn.Nodes.Add(matching_recipe_requirement.ID.ToString(), requirement);
+        //            }
+        //        }
+        //    }
+        //}
+
+        private void btnBrowseFolder_Click(object sender, EventArgs e)
+        {
+            DialogResult result = folderBrowserDialog1.ShowDialog(this);
+            if (result != DialogResult.OK)
+                return;
+
+            ReadGameDataFolder(folderBrowserDialog1.SelectedPath);
         }
 
         private void tbxFilter_TextChanged(object sender, EventArgs e)

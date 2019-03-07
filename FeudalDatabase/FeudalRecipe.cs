@@ -14,8 +14,12 @@ namespace FeudalDatabase
 
         public static Dictionary<int, FeudalRecipe> ReadAll(string folderPath)
         {
+            folderPath = Path.Combine(folderPath, FILE_PATH);
+            if (!File.Exists(folderPath))
+                throw new FileNotFoundException("The game XML file could not be found.", folderPath);
+
             XmlDocument xmlDoc = new XmlDocument();
-            xmlDoc.Load(Path.Combine(folderPath, FILE_PATH));
+            xmlDoc.Load(folderPath);
 
             XmlNode tableNode = xmlDoc.SelectSingleNode("/table");
 
