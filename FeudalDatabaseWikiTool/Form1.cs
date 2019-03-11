@@ -283,7 +283,7 @@ namespace FeudalDatabaseWikiTool
 | image = {feudalObject.FaceImage.Substring(feudalObject.FaceImage.LastIndexOf('\\') + 1)}
 | type = {(feudalObject.ParentID != 0 ? OnlyFirstLetterCapitalized(_objects_types[feudalObject.ParentID].Name) : "")}
 | door = 
-| capacity = 
+| capacity = {feudalObject.MaxContSize}
 | animals = 
 | bindingpoints = 
 | rallypoints = 
