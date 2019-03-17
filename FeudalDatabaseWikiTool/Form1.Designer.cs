@@ -96,6 +96,8 @@
             // 
             // tbxFilter
             // 
+            this.tbxFilter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tbxFilter.Location = new System.Drawing.Point(41, 3);
             this.tbxFilter.Name = "tbxFilter";
             this.tbxFilter.Size = new System.Drawing.Size(166, 20);

@@ -25,45 +25,77 @@ namespace FeudalDatabaseWikiTool
         {
             InitializeComponent();
 
+            dgvDatabase.Enabled = false;
+            textBox1.Enabled = false;
+            tbxFilter.Enabled = false;
+
             // Read the previously used folder.
-            string previousFolder = GetPreviousFolderPath();
+            string selectedFolder = GetPreviousFolderPath();
 
             // If there is no previously used folder, check if the default MMO AppData folder exist.
-            // Else open previously used folder.
-            if (previousFolder == string.Empty)
+            if (selectedFolder == string.Empty)
             {
-                string folderDefaultAppdataEu = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Life is Feudal MMO", "game", "eu");
-                if (System.IO.Directory.Exists(folderDefaultAppdataEu))
-                    ReadGameDataFolder(folderDefaultAppdataEu);
-                // Add other possible default paths here.
+                string[] defaultFolders = new string[] {
+                    System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Life is Feudal MMO", "game", "eu")
+                  , System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonProgramFilesX86), "Steam", "steamapps", "common", "Life is Feudal MMO", "game", "eu")
+                };
+                foreach (string defaultFolder in defaultFolders)
+                {
+                    if (System.IO.Directory.Exists(defaultFolder))
+                    {
+                        selectedFolder = defaultFolder;
+                        break;
+                    }
+                }
             }
-            else
-                ReadGameDataFolder(previousFolder);
+
+            if (selectedFolder != string.Empty)
+                ReadGameDataFolder(selectedFolder);
         }
 
         private void ReadGameDataFolder(string folderPath)
         {
+            dgvDatabase.Enabled = false;
+            textBox1.Enabled = false;
+            tbxFilter.Enabled = false;
+
             if (!System.IO.Directory.Exists(folderPath))
             {
-                MessageBox.Show(this, $"The game data folder could not be found:{Environment.NewLine}{folderPath}", "Folder Not Found", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, $"The game data folder could not be found:{Environment.NewLine}{Environment.NewLine}{folderPath}"
+                    , "Folder Not Found", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             lblBrowsePath.Text = folderPath;
-            SetPreviousFolderPath(folderPath);
 
             // Read the game data files.
+            try
+            {
 #if SkillXmlBroken
-            _skill_types = FeudalSkill.ManualList();
+                _skill_types = FeudalSkill.ManualList();
 #else
-            _skill_types = FeudalSkill.ReadAll(folderPath);
+                _skill_types = FeudalSkill.ReadAll(folderPath);
 #endif
-            _objects_types = FeudalObject.ReadAll(folderPath);
-            _recipes = FeudalRecipe.ReadAll(folderPath);
-            _recipe_requirements = FeudalRecipeRequirement.ReadAll(folderPath);
+                _objects_types = FeudalObject.ReadAll(folderPath);
+                _recipes = FeudalRecipe.ReadAll(folderPath);
+                _recipe_requirements = FeudalRecipeRequirement.ReadAll(folderPath);
+            }
+            catch (Exception ex)
+            {
+                DialogResult dialogResult = MessageBox.Show(this, $"Reading the game files failed.{Environment.NewLine}{Environment.NewLine}{ex.Message}{Environment.NewLine}{Environment.NewLine}Do you want to copy fully error message to clipboard?"
+                    , "Game File Reading Error", MessageBoxButtons.YesNo, MessageBoxIcon.Error, MessageBoxDefaultButton.Button2);
+                if (dialogResult == DialogResult.Yes)
+                    Clipboard.SetText(ex.ToString());
+            }
+
+            SetPreviousFolderPath(folderPath);
 
             _tableList = _objects_types.Values.ToList();
             dgvDatabase.DataSource = _tableList;
+
+            dgvDatabase.Enabled = true;
+            textBox1.Enabled = true;
+            tbxFilter.Enabled = true;
         }
 
         private void SetPreviousFolderPath(string folderPath)

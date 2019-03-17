@@ -10,16 +10,16 @@ namespace FeudalDatabase
 {
     public class FeudalSkill
     {
-        const string FILE_PATH = @"data\skill_types.xml";
+        private static string _filePath = Path.Combine("data", "skill_types.xml");
 
-        public static Dictionary<int, FeudalSkill> ReadAll(string folderPath)
+        public static Dictionary<int, FeudalSkill> ReadAll(string fullPath)
         {
-            folderPath = Path.Combine(folderPath, FILE_PATH);
-            if (!File.Exists(folderPath))
-                throw new FileNotFoundException("The game XML file could not be found.", folderPath);
+            fullPath = Path.Combine(fullPath, _filePath);
+            if (!File.Exists(fullPath))
+                throw new FileNotFoundException("The game XML file could not be found.", fullPath);
 
             XmlDocument xmlDoc = new XmlDocument();
-            xmlDoc.Load(folderPath);
+            xmlDoc.Load(fullPath);
 
             XmlNode tableNode = xmlDoc.SelectSingleNode("/table");
 
