@@ -25,6 +25,10 @@ namespace FeudalDatabaseWikiTool
         {
             InitializeComponent();
 
+#if !DEBUG
+            this.Text += " (DEBUG)";
+#endif
+
             dgvDatabase.Enabled = false;
             textBox1.Enabled = false;
             tbxFilter.Enabled = false;
@@ -71,7 +75,9 @@ namespace FeudalDatabaseWikiTool
             lblBrowsePath.Text = folderPath;
 
             // Read the game data files.
+#if !DEBUG
             try
+#endif
             {
 #if SkillXmlBroken
                 _skill_types = FeudalSkill.ManualList();
@@ -89,6 +95,7 @@ namespace FeudalDatabaseWikiTool
                 textBox1.Enabled = true;
                 tbxFilter.Enabled = true;
             }
+#if !DEBUG
             catch (Exception ex)
             {
                 DialogResult dialogResult = MessageBox.Show(this, $"Reading the game files failed.{Environment.NewLine}{Environment.NewLine}{ex.Message}{Environment.NewLine}{Environment.NewLine}Do you want to copy fully error message to clipboard?"
@@ -96,6 +103,7 @@ namespace FeudalDatabaseWikiTool
                 if (dialogResult == DialogResult.Yes)
                     Clipboard.SetText(ex.ToString());
             }
+#endif
         }
 
         private void SetPreviousFolderPath(string folderPath)
@@ -218,9 +226,9 @@ namespace FeudalDatabaseWikiTool
                 { // If not empty, add to clipboard and inform the user.
                     Clipboard.SetText(currentCell.Value.ToString());
 //                    toolStripStatusLabel1.Text = "Cell content copied to clipboard (\"" + currentCell.Value.ToString() + "\")";
-                }
-                else
-                { // Inform the user the cell was empty and therefor no reason to erase the clipboard.
+//                }
+//                else
+//                { // Inform the user the cell was empty and therefor no reason to erase the clipboard.
 //                    toolStripStatusLabel1.Text = "Cell is empty";
 //#if DEBUG
 //                    // Debug code to see if the cell is null or "".
