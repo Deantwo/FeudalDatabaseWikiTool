@@ -92,6 +92,9 @@ namespace FeudalDatabase
                         case "FaceImage":
                             objects_type.FaceImage = rowChildNode.InnerText;
                             break;
+                        case "CensoredFaceImage":
+                            //objects_type.CensoredFaceImage = rowChildNode.InnerText;
+                            break;
                         case "Description":
                             objects_type.Description = rowChildNode.InnerText;
                             break;

@@ -83,6 +83,9 @@ namespace FeudalDatabase
                         case "ImagePath":
                             recipe.ImagePath = rowChildNode.InnerText;
                             break;
+                        case "CensoredImagePath":
+                            //recipe.CensoredImagePath = rowChildNode.InnerText;
+                            break;
                         default:
                             throw new Exception($"Unknown parameter \"{rowChildNode.Name}\" found in recipe row.");
                             break;
