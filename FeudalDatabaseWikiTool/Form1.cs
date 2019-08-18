@@ -51,6 +51,8 @@ namespace FeudalDatabaseWikiTool
 
             if (selectedFolder != string.Empty)
                 ReadGameDataFolder(selectedFolder);
+
+            SetPreviousFolderPath(selectedFolder);
         }
 
         private void ReadGameDataFolder(string folderPath)
@@ -79,6 +81,13 @@ namespace FeudalDatabaseWikiTool
                 _objects_types = FeudalObject.ReadAll(folderPath);
                 _recipes = FeudalRecipe.ReadAll(folderPath);
                 _recipe_requirements = FeudalRecipeRequirement.ReadAll(folderPath);
+
+                _tableList = _objects_types.Values.ToList();
+                dgvDatabase.DataSource = _tableList;
+
+                dgvDatabase.Enabled = true;
+                textBox1.Enabled = true;
+                tbxFilter.Enabled = true;
             }
             catch (Exception ex)
             {
@@ -87,15 +96,6 @@ namespace FeudalDatabaseWikiTool
                 if (dialogResult == DialogResult.Yes)
                     Clipboard.SetText(ex.ToString());
             }
-
-            SetPreviousFolderPath(folderPath);
-
-            _tableList = _objects_types.Values.ToList();
-            dgvDatabase.DataSource = _tableList;
-
-            dgvDatabase.Enabled = true;
-            textBox1.Enabled = true;
-            tbxFilter.Enabled = true;
         }
 
         private void SetPreviousFolderPath(string folderPath)
