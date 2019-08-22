@@ -25,7 +25,7 @@ namespace FeudalDatabaseWikiTool
         {
             InitializeComponent();
 
-#if !DEBUG
+#if DEBUG
             this.Text += " (DEBUG)";
 #endif
 
