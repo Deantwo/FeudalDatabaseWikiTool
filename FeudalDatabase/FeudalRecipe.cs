@@ -15,21 +15,14 @@ namespace FeudalDatabase
         public static Dictionary<int, FeudalRecipe> ReadAll(string fullPath)
         {
             fullPath = Path.Combine(fullPath, _filePath);
-            if (!File.Exists(fullPath))
-                throw new FileNotFoundException("The game XML file could not be found.", fullPath);
-
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.Load(fullPath);
 
             XmlNode tableNode = xmlDoc.SelectSingleNode("/table");
 
-            //// Check if the StarMap is new enough.
-            //if (tableNode.Attributes["createDate"] == null)
-            //    throw new Exception("XML root node missing reuqired attribute.");
-
             // Make sure there are actaully any ChildNodes before we continue.
-            if (!tableNode.HasChildNodes)
-                return null;
+            if (tableNode == null || !tableNode.HasChildNodes)
+                throw new Exception($"XML node \"/table\" not found.");
 
             Dictionary<int, FeudalRecipe> recipes = new Dictionary<int, FeudalRecipe>();
 

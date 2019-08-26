@@ -43,6 +43,7 @@
     <Compile Include="FeudalObject.cs" />
     <Compile Include="FeudalRecipe.cs" />
     <Compile Include="FeudalRecipeRequirement.cs" />
+    <Compile Include="FeudalObjectDescription.cs" />
     <Compile Include="FeudalSkill.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -15,21 +15,14 @@ namespace FeudalDatabase
         public static Dictionary<int, FeudalObject> ReadAll(string fullPath)
         {
             fullPath = Path.Combine(fullPath, _filePath);
-            if (!File.Exists(fullPath))
-                throw new FileNotFoundException("The game XML file could not be found.", fullPath);
-
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.Load(fullPath);
 
             XmlNode tableNode = xmlDoc.SelectSingleNode("/table");
 
-            //// Check if the StarMap is new enough.
-            //if (tableNode.Attributes["createDate"] == null)
-            //    throw new Exception("XML root node missing reuqired attribute.");
-
             // Make sure there are actaully any ChildNodes before we continue.
-            if (!tableNode.HasChildNodes)
-                return null;
+            if (tableNode == null || !tableNode.HasChildNodes)
+                throw new Exception($"XML node \"/table\" not found.");
 
             Dictionary<int, FeudalObject> objects_types = new Dictionary<int, FeudalObject>();
 
@@ -74,6 +67,9 @@ namespace FeudalDatabase
                         case "IsDoor":
                             objects_type.IsDoor = Convert.ToBoolean(Convert.ToInt32(rowChildNode.InnerText));
                             break;
+                        case "IsPremium":
+                            objects_type.IsPremium = Convert.ToBoolean(Convert.ToInt32(rowChildNode.InnerText));
+                            break;
                         case "MaxContSize":
                             objects_type.MaxContSize = Convert.ToInt32(rowChildNode.InnerText);
                             break;
@@ -98,9 +94,6 @@ namespace FeudalDatabase
                         case "Description":
                             objects_type.Description = rowChildNode.InnerText;
                             break;
-                        case "IsPremium":
-                            objects_type.IsPremium = rowChildNode.InnerText;
-                            break;
                         default:
                             throw new Exception($"Unknown parameter \"{rowChildNode.Name}\" found in objects_types row.");
                             break;
@@ -122,6 +115,7 @@ namespace FeudalDatabase
         public bool IsTool { get; set; }
         public bool IsDevice { get; set; }
         public bool IsDoor { get; set; }
+        public bool IsPremium { get; set; }
         public int MaxContSize { get; set; }
         public int Length { get; set; }
         public int MaxStackSize { get; set; }
@@ -129,6 +123,5 @@ namespace FeudalDatabase
         public string BackgndImage { get; set; }
         public string FaceImage { get; set; }
         public string Description { get; set; }
-        public string IsPremium { get; set; }
     }
 }

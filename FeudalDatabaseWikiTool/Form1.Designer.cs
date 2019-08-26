@@ -28,27 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this.textBox1 = new System.Windows.Forms.TextBox();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.lblFilter = new System.Windows.Forms.Label();
-            this.tbxFilter = new System.Windows.Forms.TextBox();
-            this.dgvDatabase = new System.Windows.Forms.DataGridView();
-            this.btnBrowseFolder = new System.Windows.Forms.Button();
-            this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            this.btnLoad = new System.Windows.Forms.Button();
             this.lblBrowseFolder = new System.Windows.Forms.Label();
-            this.lblBrowsePath = new System.Windows.Forms.Label();
-            this.cmsRightClick = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.cmsRightClickCopy = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.cmsRightClickItemTemplate = new System.Windows.Forms.ToolStripMenuItem();
-            this.cmsRightClickBuildingTemplate = new System.Windows.Forms.ToolStripMenuItem();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
-            this.splitContainer1.Panel1.SuspendLayout();
-            this.splitContainer1.Panel2.SuspendLayout();
-            this.splitContainer1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvDatabase)).BeginInit();
-            this.cmsRightClick.SuspendLayout();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.tbxBrowsePath = new System.Windows.Forms.TextBox();
+            this.btnBrowse = new System.Windows.Forms.Button();
+            this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.SuspendLayout();
             // 
             // textBox1
@@ -56,167 +43,95 @@
             this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox1.Location = new System.Drawing.Point(3, 3);
+            this.textBox1.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.textBox1.Location = new System.Drawing.Point(12, 68);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
+            this.textBox1.ReadOnly = true;
             this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox1.Size = new System.Drawing.Size(410, 457);
+            this.textBox1.Size = new System.Drawing.Size(633, 436);
             this.textBox1.TabIndex = 2;
             this.textBox1.WordWrap = false;
             // 
-            // splitContainer1
+            // btnLoad
             // 
-            this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.splitContainer1.Location = new System.Drawing.Point(12, 41);
-            this.splitContainer1.Name = "splitContainer1";
-            // 
-            // splitContainer1.Panel1
-            // 
-            this.splitContainer1.Panel1.Controls.Add(this.lblFilter);
-            this.splitContainer1.Panel1.Controls.Add(this.tbxFilter);
-            this.splitContainer1.Panel1.Controls.Add(this.dgvDatabase);
-            // 
-            // splitContainer1.Panel2
-            // 
-            this.splitContainer1.Panel2.Controls.Add(this.textBox1);
-            this.splitContainer1.Size = new System.Drawing.Size(630, 463);
-            this.splitContainer1.SplitterDistance = 210;
-            this.splitContainer1.TabIndex = 3;
-            // 
-            // lblFilter
-            // 
-            this.lblFilter.AutoSize = true;
-            this.lblFilter.Location = new System.Drawing.Point(3, 6);
-            this.lblFilter.Name = "lblFilter";
-            this.lblFilter.Size = new System.Drawing.Size(32, 13);
-            this.lblFilter.TabIndex = 3;
-            this.lblFilter.Text = "Filter:";
-            // 
-            // tbxFilter
-            // 
-            this.tbxFilter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbxFilter.Location = new System.Drawing.Point(41, 3);
-            this.tbxFilter.Name = "tbxFilter";
-            this.tbxFilter.Size = new System.Drawing.Size(166, 20);
-            this.tbxFilter.TabIndex = 4;
-            this.tbxFilter.TextChanged += new System.EventHandler(this.tbxFilter_TextChanged);
-            // 
-            // dgvDatabase
-            // 
-            this.dgvDatabase.AllowUserToAddRows = false;
-            this.dgvDatabase.AllowUserToDeleteRows = false;
-            this.dgvDatabase.AllowUserToOrderColumns = true;
-            this.dgvDatabase.AllowUserToResizeRows = false;
-            this.dgvDatabase.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.dgvDatabase.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
-            this.dgvDatabase.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
-            this.dgvDatabase.Location = new System.Drawing.Point(3, 29);
-            this.dgvDatabase.Name = "dgvDatabase";
-            this.dgvDatabase.ReadOnly = true;
-            this.dgvDatabase.RowHeadersVisible = false;
-            this.dgvDatabase.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-            this.dgvDatabase.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvDatabase.Size = new System.Drawing.Size(204, 431);
-            this.dgvDatabase.StandardTab = true;
-            this.dgvDatabase.TabIndex = 3;
-            this.dgvDatabase.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgvDatabase_CellMouseDown);
-            this.dgvDatabase.SortCompare += new System.Windows.Forms.DataGridViewSortCompareEventHandler(this.dgvDatabase_SortCompare);
-            this.dgvDatabase.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dgvDatabase_KeyDown);
-            // 
-            // btnBrowseFolder
-            // 
-            this.btnBrowseFolder.Location = new System.Drawing.Point(12, 12);
-            this.btnBrowseFolder.Name = "btnBrowseFolder";
-            this.btnBrowseFolder.Size = new System.Drawing.Size(75, 23);
-            this.btnBrowseFolder.TabIndex = 4;
-            this.btnBrowseFolder.Text = "Browse...";
-            this.btnBrowseFolder.UseVisualStyleBackColor = true;
-            this.btnBrowseFolder.Click += new System.EventHandler(this.btnBrowseFolder_Click);
-            // 
-            // folderBrowserDialog1
-            // 
-            this.folderBrowserDialog1.RootFolder = System.Environment.SpecialFolder.MyComputer;
-            this.folderBrowserDialog1.ShowNewFolderButton = false;
+            this.btnLoad.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnLoad.Location = new System.Drawing.Point(588, 12);
+            this.btnLoad.Name = "btnLoad";
+            this.btnLoad.Size = new System.Drawing.Size(57, 23);
+            this.btnLoad.TabIndex = 4;
+            this.btnLoad.Text = "Load";
+            this.btnLoad.UseVisualStyleBackColor = true;
+            this.btnLoad.Click += new System.EventHandler(this.btnLoad_Click);
             // 
             // lblBrowseFolder
             // 
             this.lblBrowseFolder.AutoSize = true;
-            this.lblBrowseFolder.Location = new System.Drawing.Point(93, 17);
+            this.lblBrowseFolder.Location = new System.Drawing.Point(12, 17);
             this.lblBrowseFolder.Name = "lblBrowseFolder";
             this.lblBrowseFolder.Size = new System.Drawing.Size(135, 13);
             this.lblBrowseFolder.TabIndex = 5;
             this.lblBrowseFolder.Text = "Life is Feudal Game Folder:";
             // 
-            // lblBrowsePath
+            // comboBox1
             // 
-            this.lblBrowsePath.AutoSize = true;
-            this.lblBrowsePath.Location = new System.Drawing.Point(234, 17);
-            this.lblBrowsePath.Name = "lblBrowsePath";
-            this.lblBrowsePath.Size = new System.Drawing.Size(16, 13);
-            this.lblBrowsePath.TabIndex = 5;
-            this.lblBrowsePath.Text = "...";
+            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Items.AddRange(new object[] {
+            "SkillData",
+            "ObjectData",
+            "ObjectDescriptionData",
+            "RecipeData",
+            "RecipeRequirementsData"});
+            this.comboBox1.Location = new System.Drawing.Point(76, 41);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(238, 21);
+            this.comboBox1.TabIndex = 6;
+            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
-            // cmsRightClick
+            // label1
             // 
-            this.cmsRightClick.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.cmsRightClickCopy,
-            this.toolStripSeparator1,
-            this.cmsRightClickItemTemplate,
-            this.cmsRightClickBuildingTemplate});
-            this.cmsRightClick.Name = "cmsRightClick";
-            this.cmsRightClick.Size = new System.Drawing.Size(208, 76);
-            this.cmsRightClick.Opening += new System.ComponentModel.CancelEventHandler(this.cmsRightClick_Opening);
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(12, 44);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(58, 13);
+            this.label1.TabIndex = 5;
+            this.label1.Text = "DataPage:";
             // 
-            // cmsRightClickCopy
+            // tbxBrowsePath
             // 
-            this.cmsRightClickCopy.Name = "cmsRightClickCopy";
-            this.cmsRightClickCopy.Size = new System.Drawing.Size(207, 22);
-            this.cmsRightClickCopy.Text = "Copy";
-            this.cmsRightClickCopy.Click += new System.EventHandler(this.cmsRightClickCopy_Click);
+            this.tbxBrowsePath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbxBrowsePath.Location = new System.Drawing.Point(153, 14);
+            this.tbxBrowsePath.Name = "tbxBrowsePath";
+            this.tbxBrowsePath.Size = new System.Drawing.Size(395, 20);
+            this.tbxBrowsePath.TabIndex = 7;
             // 
-            // toolStripSeparator1
+            // btnBrowse
             // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(204, 6);
-            // 
-            // cmsRightClickItemTemplate
-            // 
-            this.cmsRightClickItemTemplate.Name = "cmsRightClickItemTemplate";
-            this.cmsRightClickItemTemplate.Size = new System.Drawing.Size(207, 22);
-            this.cmsRightClickItemTemplate.Text = "Create Item Template";
-            this.cmsRightClickItemTemplate.Click += new System.EventHandler(this.cmsRightClickItemTemplate_Click);
-            // 
-            // cmsRightClickBuildingTemplate
-            // 
-            this.cmsRightClickBuildingTemplate.Name = "cmsRightClickBuildingTemplate";
-            this.cmsRightClickBuildingTemplate.Size = new System.Drawing.Size(207, 22);
-            this.cmsRightClickBuildingTemplate.Text = "Create Building Template";
-            this.cmsRightClickBuildingTemplate.Click += new System.EventHandler(this.cmsRightClickBuildingTemplate_Click);
+            this.btnBrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnBrowse.Location = new System.Drawing.Point(554, 12);
+            this.btnBrowse.Name = "btnBrowse";
+            this.btnBrowse.Size = new System.Drawing.Size(28, 23);
+            this.btnBrowse.TabIndex = 4;
+            this.btnBrowse.Text = "...";
+            this.btnBrowse.UseVisualStyleBackColor = true;
+            this.btnBrowse.Click += new System.EventHandler(this.btnBrowse_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(654, 516);
-            this.Controls.Add(this.lblBrowsePath);
+            this.ClientSize = new System.Drawing.Size(657, 516);
+            this.Controls.Add(this.tbxBrowsePath);
+            this.Controls.Add(this.comboBox1);
+            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.lblBrowseFolder);
-            this.Controls.Add(this.btnBrowseFolder);
-            this.Controls.Add(this.splitContainer1);
+            this.Controls.Add(this.btnBrowse);
+            this.Controls.Add(this.btnLoad);
             this.Name = "Form1";
             this.Text = "FeudalDatabaseWikiTool";
-            this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel1.PerformLayout();
-            this.splitContainer1.Panel2.ResumeLayout(false);
-            this.splitContainer1.Panel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
-            this.splitContainer1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dgvDatabase)).EndInit();
-            this.cmsRightClick.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -224,19 +139,13 @@
 
         #endregion
         private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.Button btnBrowseFolder;
-        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
+        private System.Windows.Forms.Button btnLoad;
         private System.Windows.Forms.Label lblBrowseFolder;
-        private System.Windows.Forms.Label lblBrowsePath;
-        private System.Windows.Forms.DataGridView dgvDatabase;
-        private System.Windows.Forms.ContextMenuStrip cmsRightClick;
-        private System.Windows.Forms.ToolStripMenuItem cmsRightClickCopy;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripMenuItem cmsRightClickItemTemplate;
-        private System.Windows.Forms.ToolStripMenuItem cmsRightClickBuildingTemplate;
-        private System.Windows.Forms.Label lblFilter;
-        private System.Windows.Forms.TextBox tbxFilter;
+        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox tbxBrowsePath;
+        private System.Windows.Forms.Button btnBrowse;
+        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
     }
 }
 
