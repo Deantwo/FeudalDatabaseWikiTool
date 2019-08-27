@@ -16,7 +16,7 @@ data\objects_types_Description.xml
 data\recipe.xml
 data\recipe_requirement.xml
 ```
- - These XML files are in the MMO version of the game anymore. You have to get the files from one of the LiF staff.
+ - These XML files are not included in the MMO version of the game anymore. You have to get the files from one of the LiF staff.
 4. Select a XML files from the drop-down list.
 5. Update the corresponding [`Module:*` page on the wiki](https://lifeisfeudal.gamepedia.com/index.php?title=Special%3APrefixIndex&prefix=&namespace=828) with the output text.
  - These `Module:*` pages might be protected so only wiki admins can edit them.
