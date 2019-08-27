@@ -54,8 +54,6 @@ namespace FeudalDatabaseWikiTool
             }
 
             tbxBrowsePath.Text = selectedFolder;
-
-            SetPreviousFolderPath(selectedFolder);
         }
 
         private void ReadGameDataFolder(string folderPath)
@@ -99,6 +97,8 @@ namespace FeudalDatabaseWikiTool
                     Clipboard.SetText(ex.ToString());
             }
 #endif
+
+            SetPreviousFolderPath(folderPath);
         }
 
         private void SetPreviousFolderPath(string folderPath)
