@@ -88,7 +88,7 @@ namespace FeudalDatabase
                         case "FaceImage":
                             objects_type.FaceImage = rowChildNode.InnerText;
                             break;
-                        case "CensoredFaceImage":
+                        case "CensoredFaceImage": // Only seen in MMO files.
                             //objects_type.CensoredFaceImage = rowChildNode.InnerText;
                             break;
                         case "Description":

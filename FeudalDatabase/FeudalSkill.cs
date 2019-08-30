@@ -95,6 +95,9 @@ namespace FeudalDatabase
                         case "skill_mult":
                             skill_type.skill_mult = Convert.ToInt32(rowChildNode.InnerText);
                             break;
+                        case "ExpToSkillMult": // Only seen in MMO files.
+                            skill_type.ExpToSkillMult = Convert.ToInt32(rowChildNode.InnerText);
+                            break;
                         case "abilities":
                             break;
                         default:
@@ -173,5 +176,6 @@ namespace FeudalDatabase
         public int MasterMessageID { get; set; }
         public int GMMessageID { get; set; }
         public int skill_mult { get; set; }
+        public int ExpToSkillMult { get; set; }
     }
 }
