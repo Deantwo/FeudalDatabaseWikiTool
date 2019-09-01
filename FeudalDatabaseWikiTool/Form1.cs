@@ -13,6 +13,8 @@ namespace FeudalDatabaseWikiTool
 {
     public partial class Form1 : Form
     {
+        string _selectedFolder;
+
         Dictionary<int, FeudalSkill> _skill_types;
         Dictionary<int, FeudalObject> _objects_types;
         Dictionary<int, FeudalRecipe> _recipes;
@@ -34,10 +36,10 @@ namespace FeudalDatabaseWikiTool
             tbxFilter.Enabled = false;
 
             // Read the previously used folder.
-            string selectedFolder = GetPreviousFolderPath();
+            _selectedFolder = GetPreviousFolderPath();
 
             // If there is no previously used folder, check if the default MMO AppData folder exist.
-            if (selectedFolder == string.Empty)
+            if (_selectedFolder == string.Empty)
             {
                 string[] defaultFolders = new string[] {
                     System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Life is Feudal MMO", "game", "eu")
@@ -47,16 +49,14 @@ namespace FeudalDatabaseWikiTool
                 {
                     if (System.IO.Directory.Exists(defaultFolder))
                     {
-                        selectedFolder = defaultFolder;
+                        _selectedFolder = defaultFolder;
                         break;
                     }
                 }
             }
 
-            if (selectedFolder != string.Empty)
-                ReadGameDataFolder(selectedFolder);
-
-            SetPreviousFolderPath(selectedFolder);
+            if (_selectedFolder != string.Empty)
+                ReadGameDataFolder(_selectedFolder);
         }
 
         private void ReadGameDataFolder(string folderPath)
@@ -73,6 +73,7 @@ namespace FeudalDatabaseWikiTool
             }
 
             lblBrowsePath.Text = folderPath;
+            _selectedFolder = folderPath;
 
             // Read the game data files.
 #if !DEBUG
@@ -91,6 +92,8 @@ namespace FeudalDatabaseWikiTool
                 dgvDatabase.Enabled = true;
                 textBox1.Enabled = true;
                 tbxFilter.Enabled = true;
+
+                SetPreviousFolderPath(folderPath);
             }
 #if !DEBUG
             catch (Exception ex)
@@ -139,6 +142,8 @@ namespace FeudalDatabaseWikiTool
 
         private void btnBrowseFolder_Click(object sender, EventArgs e)
         {
+            folderBrowserDialog1.RootFolder = Environment.SpecialFolder.Desktop;
+            folderBrowserDialog1.SelectedPath = _selectedFolder;
             DialogResult result = folderBrowserDialog1.ShowDialog(this);
             if (result != DialogResult.OK)
                 return;
