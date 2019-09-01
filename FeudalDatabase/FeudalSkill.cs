@@ -15,25 +15,22 @@ namespace FeudalDatabase
         public static Dictionary<int, FeudalSkill> ReadAll(string fullPath)
         {
             fullPath = Path.Combine(fullPath, _filePath);
-            if (!File.Exists(fullPath))
-                throw new FileNotFoundException("The game XML file could not be found.", fullPath);
-
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.Load(fullPath);
 
-            XmlNode tableNode = xmlDoc.SelectSingleNode("/table");
+            // This is the only XML file that has a namespace.
+            XmlNamespaceManager nsmgr = new XmlNamespaceManager(xmlDoc.NameTable);
+            nsmgr.AddNamespace("xsd", "https://lifeisfeudal.com/schemas/skill_types.xsd");
 
-            //// Check if the StarMap is new enough.
-            //if (tableNode.Attributes["createDate"] == null)
-            //    throw new Exception("XML root node missing reuqired attribute.");
+            XmlNode tableNode = xmlDoc.SelectSingleNode("/xsd:table", nsmgr);
 
             // Make sure there are actaully any ChildNodes before we continue.
-            if (!tableNode.HasChildNodes)
-                return null;
+            if (tableNode == null || !tableNode.HasChildNodes)
+                throw new Exception($"XML node \"/table\" not found.");
 
             Dictionary<int, FeudalSkill> skill_types = new Dictionary<int, FeudalSkill>();
 
-            XmlNodeList rowNodeList = tableNode.SelectNodes("row");
+            XmlNodeList rowNodeList = tableNode.SelectNodes("xsd:row", nsmgr);
             foreach (XmlNode rowNode in rowNodeList)
             {
                 // Make sure there are actaully any ChildNodes before we continue.
@@ -97,6 +94,9 @@ namespace FeudalDatabase
                             break;
                         case "skill_mult":
                             skill_type.skill_mult = Convert.ToInt32(rowChildNode.InnerText);
+                            break;
+                        case "ExpToSkillMult": // Only seen in MMO files.
+                            skill_type.ExpToSkillMult = Convert.ToInt32(rowChildNode.InnerText);
                             break;
                         case "abilities":
                             break;
@@ -176,5 +176,6 @@ namespace FeudalDatabase
         public int MasterMessageID { get; set; }
         public int GMMessageID { get; set; }
         public int skill_mult { get; set; }
+        public int ExpToSkillMult { get; set; }
     }
 }
