@@ -9,6 +9,8 @@ namespace FeudalDatabaseWikiTool
 {
     internal static class DataPages
     {
+        private static IEnumerable<FeudalRecipeRequirement> feudalRecipeTools;
+
         private static string JsonFormat(string s)
         {
             if (string.IsNullOrEmpty(s))
@@ -196,6 +198,33 @@ namespace FeudalDatabaseWikiTool
                 sb.AppendLine($"\t\tInfluence = {JsonFormat(feudalRecipeRequirement.Influence)},");
                 sb.AppendLine($"\t\tQuantity = {JsonFormat(feudalRecipeRequirement.Quantity)},");
                 sb.AppendLine($"\t\tIsRegionItemRequired = {JsonFormat(feudalRecipeRequirement.IsRegionItemRequired)}");
+            }
+
+            sb.AppendLine("\t}");
+            sb.AppendLine("}");
+            return sb.ToString();
+        }
+
+        internal static string CreateRecipeTools(Dictionary<int, FeudalRecipeTool>.ValueCollection feudalRecipeTools)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            foreach (FeudalRecipeTool feudalRecipeTool in feudalRecipeTools)
+            {
+                if (sb.Length == 0)
+                {
+                    sb.AppendLine("return {");
+                    sb.AppendLine("\t{");
+                }
+                else
+                {
+                    sb.AppendLine("\t},");
+                    sb.AppendLine("\t{");
+                }
+
+                sb.AppendLine($"\t\tID = {JsonFormat(feudalRecipeTool.ID)},");
+                sb.AppendLine($"\t\tRecipeID = {JsonFormat(feudalRecipeTool.RecipeID)},");
+                sb.AppendLine($"\t\tStartingToolID = {JsonFormat(feudalRecipeTool.StartingToolID)}");
             }
 
             sb.AppendLine("\t}");

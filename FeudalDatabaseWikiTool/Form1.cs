@@ -19,6 +19,7 @@ namespace FeudalDatabaseWikiTool
         Dictionary<int, FeudalObjectDescription> _object_type_descriptions;
         Dictionary<int, FeudalRecipe> _recipes;
         Dictionary<int, FeudalRecipeRequirement> _recipe_requirements;
+        Dictionary<int, FeudalRecipeTool> _recipe_tools;
 
         public Form1()
         {
@@ -84,6 +85,7 @@ namespace FeudalDatabaseWikiTool
                 _object_type_descriptions = FeudalObjectDescription.ReadAll(folderPath);
                 _recipes = FeudalRecipe.ReadAll(folderPath);
                 _recipe_requirements = FeudalRecipeRequirement.ReadAll(folderPath);
+                _recipe_tools = FeudalRecipeTool.ReadAll(folderPath);
 
                 textBox1.Enabled = true;
                 comboBox1.Enabled = true;
@@ -151,6 +153,9 @@ namespace FeudalDatabaseWikiTool
                     break;
                 case 4:
                     textBox1.Text = DataPages.CreateRecipeRequirements(_recipe_requirements.Values);
+                    break;
+                case 5:
+                    textBox1.Text = DataPages.CreateRecipeTools(_recipe_tools.Values);
                     break;
                 default:
                     textBox1.Text = "Not implemented yet.";
