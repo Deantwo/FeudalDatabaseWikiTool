@@ -1,5 +1,4 @@
-﻿#define SkillXmlBroken
-using FeudalDatabase;
+﻿using FeudalDatabase;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -18,6 +17,7 @@ namespace FeudalDatabaseWikiTool
         Dictionary<int, FeudalObject> _objects_types;
         Dictionary<int, FeudalRecipe> _recipes;
         Dictionary<int, FeudalRecipeRequirement> _recipe_requirements;
+        Dictionary<int, FeudalRecipeTool> _recipe_tools;
 
         List<FeudalObject> _tableList;
 
@@ -25,7 +25,7 @@ namespace FeudalDatabaseWikiTool
         {
             InitializeComponent();
 
-#if !DEBUG
+#if DEBUG
             this.Text += " (DEBUG)";
 #endif
 
@@ -79,14 +79,11 @@ namespace FeudalDatabaseWikiTool
             try
 #endif
             {
-#if SkillXmlBroken
-                _skill_types = FeudalSkill.ManualList();
-#else
                 _skill_types = FeudalSkill.ReadAll(folderPath);
-#endif
                 _objects_types = FeudalObject.ReadAll(folderPath);
                 _recipes = FeudalRecipe.ReadAll(folderPath);
                 _recipe_requirements = FeudalRecipeRequirement.ReadAll(folderPath);
+                _recipe_tools = FeudalRecipeTool.ReadAll(folderPath);
 
                 _tableList = _objects_types.Values.ToList();
                 dgvDatabase.DataSource = _tableList;
@@ -278,6 +275,7 @@ namespace FeudalDatabaseWikiTool
                 string lineHeader = $"| r{r + 1}_";
                 List<FeudalRecipeRequirement> ingredRequirements = _recipe_requirements.Values.Where(x => x.RecipeID == recipes[r].ID && !_objects_types[x.MaterialObjectTypeID].IsTool && !_objects_types[x.MaterialObjectTypeID].IsDevice).ToList();
                 List<FeudalRecipeRequirement> equipRequirements = _recipe_requirements.Values.Where(x => x.RecipeID == recipes[r].ID && (_objects_types[x.MaterialObjectTypeID].IsTool || _objects_types[x.MaterialObjectTypeID].IsDevice)).ToList();
+                List<FeudalRecipeTool> toolRequirements = _recipe_tools.Values.Where(x => x.RecipeID == recipes[r].ID).ToList();
                 for (int ir = 0; ir < ingredRequirements.Count; ir++)
                 {
                     infobox += $@"{Environment.NewLine}{lineHeader}ingred{ir + 1} = {OnlyFirstLetterCapitalized(_objects_types[ingredRequirements[ir].MaterialObjectTypeID].Name)}
@@ -294,6 +292,7 @@ namespace FeudalDatabaseWikiTool
                 infobox += $@"{Environment.NewLine}{lineHeader}skill = {OnlyFirstLetterCapitalized(_skill_types[recipes[r].SkillTypeID].Name)}
 {lineHeader}minskilllevel = {recipes[r].SkillLvl}
 {lineHeader}skilldepends = {recipes[r].SkillDepends}
+{lineHeader}requiredtool = {string.Join(";", toolRequirements.Select(x => OnlyFirstLetterCapitalized(_objects_types[x.StartingToolID].Name)).ToList())}
 {lineHeader}blueprint = {(recipes[r].IsBlueprint ? "1" : "")}
 {lineHeader}quantity = {recipes[r].Quantity}
 {lineHeader}duration = ";
@@ -337,6 +336,7 @@ namespace FeudalDatabaseWikiTool
                 string lineHeader = $"| r{r + 1}_";
                 List<FeudalRecipeRequirement> ingredRequirements = _recipe_requirements.Values.Where(x => x.RecipeID == recipes[r].ID && !_objects_types[x.MaterialObjectTypeID].IsTool && !_objects_types[x.MaterialObjectTypeID].IsDevice).ToList();
                 List<FeudalRecipeRequirement> equipRequirements = _recipe_requirements.Values.Where(x => x.RecipeID == recipes[r].ID && (_objects_types[x.MaterialObjectTypeID].IsTool || _objects_types[x.MaterialObjectTypeID].IsDevice)).ToList();
+                List<FeudalRecipeTool> toolRequirements = _recipe_tools.Values.Where(x => x.RecipeID == recipes[r].ID).ToList();
                 for (int ir = 0; ir < ingredRequirements.Count; ir++)
                 {
                     infobox += $@"{Environment.NewLine}{lineHeader}ingred{ir + 1} = {OnlyFirstLetterCapitalized(_objects_types[ingredRequirements[ir].MaterialObjectTypeID].Name)}
@@ -353,6 +353,7 @@ namespace FeudalDatabaseWikiTool
                 infobox += $@"{Environment.NewLine}{lineHeader}skill = {OnlyFirstLetterCapitalized(_skill_types[recipes[r].SkillTypeID].Name)}
 {lineHeader}minskilllevel = {recipes[r].SkillLvl}
 {lineHeader}skilldepends = {recipes[r].SkillDepends}
+{lineHeader}requiredtool = {string.Join(";", toolRequirements.Select(x => OnlyFirstLetterCapitalized(_objects_types[x.StartingToolID].Name)).ToList())}
 {lineHeader}duration = ";
             }
 
