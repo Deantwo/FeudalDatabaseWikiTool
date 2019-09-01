@@ -60,7 +60,7 @@ namespace FeudalDatabaseWikiTool
                 sb.AppendLine($"\t\tDescLvl100 = {JsonFormat(feudalSkill.DescLvl100)},");
                 sb.AppendLine($"\t\tMasterMessageID = {JsonFormat(feudalSkill.MasterMessageID)},");
                 sb.AppendLine($"\t\tGMMessageID = {JsonFormat(feudalSkill.GMMessageID)},");
-                sb.AppendLine($"\t\tskill_mult = {JsonFormat(feudalSkill.skill_mult)}");
+                sb.AppendLine($"\t\tskill_mult = {JsonFormat(feudalSkill.skill_mult)},");
                 sb.AppendLine($"\t\tExpToSkillMult = {JsonFormat(feudalSkill.ExpToSkillMult)}");
             }
 
