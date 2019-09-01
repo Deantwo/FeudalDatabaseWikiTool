@@ -72,6 +72,7 @@ namespace FeudalDatabaseWikiTool
                 return;
             }
 
+            // Set the previously used folder.
             lblBrowsePath.Text = folderPath;
             _selectedFolder = folderPath;
 
@@ -116,30 +117,6 @@ namespace FeudalDatabaseWikiTool
             return Properties.Settings.Default.FolderPrevious;
         }
 
-        //private void TestDataFolder()
-        //{
-        //    List<FeudalObject> testlist = new List<FeudalObject>();
-        //    foreach (FeudalObject objects_type in _objects_types.Values)
-        //    {
-        //        testlist.Add(objects_type);
-        //    
-        //        IEnumerable<FeudalRecipe> matching_recipes = recipes.Values.Where(x => x.ResultObjectTypeID == objects_type.ID);
-        //        foreach (FeudalRecipe matching_recipe in matching_recipes)
-        //        {
-        //            TreeNode ctn = tn.Nodes.Add(matching_recipe.ID.ToString(), matching_recipe.Name);
-        //    
-        //            IEnumerable<FeudalRecipeRequirement> matching_recipe_requirements = recipe_requirements.Values.Where(x => x.RecipeID == matching_recipe.ID);
-        //            foreach (FeudalRecipeRequirement matching_recipe_requirement in matching_recipe_requirements)
-        //            {
-        //                string requirement = $"{matching_recipe_requirement.Quantity} x {objects_types[matching_recipe_requirement.MaterialObjectTypeID].Name}";
-        //                if (matching_recipe_requirement.IsRegionItemRequired)
-        //                    requirement += $" (Regional)";
-        //                ctn.Nodes.Add(matching_recipe_requirement.ID.ToString(), requirement);
-        //            }
-        //        }
-        //    }
-        //}
-
         private void btnBrowseFolder_Click(object sender, EventArgs e)
         {
             folderBrowserDialog1.RootFolder = Environment.SpecialFolder.Desktop;
@@ -164,6 +141,172 @@ namespace FeudalDatabaseWikiTool
                     dgvDatabase.DataSource = _tableList.FindAll(x => x.Name.ToLower().Contains(tbxFilter.Text.ToLower()));
             }
         }
+
+        private void ItemTemplate(FeudalObject feudalObject)
+        {
+            List<FeudalRecipe> recipes = _recipes.Values.Where(x => x.ResultObjectTypeID == feudalObject.ID).ToList();
+
+            string infobox = $@"{{{{infobox item
+| name = {feudalObject.Name}
+| image = {feudalObject.FaceImage.Substring(feudalObject.FaceImage.LastIndexOf('\\') + 1)}
+| type = {(feudalObject.ParentID != 0 ? OnlyFirstLetterCapitalized(_objects_types[feudalObject.ParentID].Name) : "")}
+| container = {(feudalObject.IsContainer ? "1" : "")}
+| movable = {(feudalObject.IsMovableObject ? "1" : "")}
+| unmovable = {(feudalObject.IsUnmovableobject ? "1" : "")}
+| tool = {(feudalObject.IsTool ? "1" : "")}
+| device = {(feudalObject.IsDevice ? "1" : "")}
+| maxcontsize = {feudalObject.MaxContSize}
+| length = {feudalObject.Length}
+| maxstacksize = {feudalObject.MaxStackSize}
+| unitweight = {feudalObject.UnitWeight}
+| id = {feudalObject.ID}
+| parentid = {feudalObject.ParentID}
+| craftable = {(recipes.Any() ? "y" : "")}";
+
+            for (int r = 0; r < recipes.Count; r++)
+            {
+                string lineHeader = $"| r{r + 1}_";
+                List<FeudalRecipeRequirement> ingredRequirements = _recipe_requirements.Values.Where(x => x.RecipeID == recipes[r].ID && !_objects_types[x.MaterialObjectTypeID].IsTool && !_objects_types[x.MaterialObjectTypeID].IsDevice).ToList();
+                List<FeudalRecipeRequirement> equipRequirements = _recipe_requirements.Values.Where(x => x.RecipeID == recipes[r].ID && (_objects_types[x.MaterialObjectTypeID].IsTool || _objects_types[x.MaterialObjectTypeID].IsDevice)).ToList();
+                List<FeudalRecipeTool> toolRequirements = _recipe_tools.Values.Where(x => x.RecipeID == recipes[r].ID).ToList();
+                for (int ir = 0; ir < ingredRequirements.Count; ir++)
+                {
+                    infobox += $@"{Environment.NewLine}{lineHeader}ingred{ir + 1} = {OnlyFirstLetterCapitalized(_objects_types[ingredRequirements[ir].MaterialObjectTypeID].Name)}
+{lineHeader}regional{ir + 1} = {(ingredRequirements[ir].IsRegionItemRequired ? "1" : "")}
+{lineHeader}quantity{ir + 1} = {ingredRequirements[ir].Quantity}
+{lineHeader}influence{ir + 1} = {ingredRequirements[ir].Influence}";
+                }
+                for (int er = 0; er < equipRequirements.Count; er++)
+                {
+                    infobox += $@"{Environment.NewLine}{lineHeader}equip{er + 1} = {OnlyFirstLetterCapitalized(_objects_types[equipRequirements[er].MaterialObjectTypeID].Name)}
+{lineHeader}cost{er + 1} = {equipRequirements[er].Quantity}
+{lineHeader}impact{er + 1} = {equipRequirements[er].Influence}";
+                }
+                infobox += $@"{Environment.NewLine}{lineHeader}skill = {OnlyFirstLetterCapitalized(_skill_types[recipes[r].SkillTypeID].Name)}
+{lineHeader}minskilllevel = {recipes[r].SkillLvl}
+{lineHeader}skilldepends = {recipes[r].SkillDepends}
+{lineHeader}requiredtool = {string.Join(";", toolRequirements.Select(x => OnlyFirstLetterCapitalized(_objects_types[x.StartingToolID].Name)).ToList())}
+{lineHeader}blueprint = {(recipes[r].IsBlueprint ? "1" : "")}
+{lineHeader}quantity = {recipes[r].Quantity}
+{lineHeader}duration = ";
+            }
+
+            infobox += $"{Environment.NewLine}}}}}";
+
+            textBox1.Text = infobox;
+        }
+
+        private void BuildingTemplate(FeudalObject feudalObject)
+        {
+            List<FeudalRecipe> recipes = _recipes.Values.Where(x => x.ResultObjectTypeID == feudalObject.ID).ToList();
+
+            string infobox = $@"{{{{infobox building
+| name = {feudalObject.Name}
+| image = {feudalObject.FaceImage.Substring(feudalObject.FaceImage.LastIndexOf('\\') + 1)}
+| type = {(feudalObject.ParentID != 0 ? OnlyFirstLetterCapitalized(_objects_types[feudalObject.ParentID].Name) : "")}
+| door = 
+| capacity = {feudalObject.MaxContSize}
+| animals = 
+| bindingpoints = 
+| rallypoints = 
+| constructionsize = 
+| id = {feudalObject.ID}
+| parentid = {feudalObject.ParentID}
+| craftable = {(recipes.Any() ? "y" : "")}";
+
+            for (int r = 0; r < recipes.Count; r++)
+            {
+                string lineHeader = $"| r{r + 1}_";
+                List<FeudalRecipeRequirement> ingredRequirements = _recipe_requirements.Values.Where(x => x.RecipeID == recipes[r].ID && !_objects_types[x.MaterialObjectTypeID].IsTool && !_objects_types[x.MaterialObjectTypeID].IsDevice).ToList();
+                List<FeudalRecipeRequirement> equipRequirements = _recipe_requirements.Values.Where(x => x.RecipeID == recipes[r].ID && (_objects_types[x.MaterialObjectTypeID].IsTool || _objects_types[x.MaterialObjectTypeID].IsDevice)).ToList();
+                List<FeudalRecipeTool> toolRequirements = _recipe_tools.Values.Where(x => x.RecipeID == recipes[r].ID).ToList();
+                for (int ir = 0; ir < ingredRequirements.Count; ir++)
+                {
+                    infobox += $@"{Environment.NewLine}{lineHeader}ingred{ir + 1} = {OnlyFirstLetterCapitalized(_objects_types[ingredRequirements[ir].MaterialObjectTypeID].Name)}
+{lineHeader}regional{ir + 1} = {(ingredRequirements[ir].IsRegionItemRequired ? "1" : "")}
+{lineHeader}quantity{ir + 1} = {ingredRequirements[ir].Quantity}
+{lineHeader}influence{ir + 1} = {ingredRequirements[ir].Influence}";
+                }
+                for (int er = 0; er < equipRequirements.Count; er++)
+                {
+                    infobox += $@"{Environment.NewLine}{lineHeader}equip{er + 1} = {OnlyFirstLetterCapitalized(_objects_types[equipRequirements[er].MaterialObjectTypeID].Name)}
+{lineHeader}cost{er + 1} = {equipRequirements[er].Quantity}
+{lineHeader}impact{er + 1} = {equipRequirements[er].Influence}";
+                }
+                infobox += $@"{Environment.NewLine}{lineHeader}skill = {OnlyFirstLetterCapitalized(_skill_types[recipes[r].SkillTypeID].Name)}
+{lineHeader}minskilllevel = {recipes[r].SkillLvl}
+{lineHeader}skilldepends = {recipes[r].SkillDepends}
+{lineHeader}requiredtool = {string.Join(";", toolRequirements.Select(x => OnlyFirstLetterCapitalized(_objects_types[x.StartingToolID].Name)).ToList())}
+{lineHeader}duration = ";
+            }
+
+            infobox += $"{Environment.NewLine}}}}}";
+
+            textBox1.Text = infobox;
+        }
+
+        private string OnlyFirstLetterCapitalized(string s)
+        {
+            return $"{s.Remove(1).ToUpper()}{s.Substring(1).ToLower()}";
+        }
+
+        #region DataGridView
+        private void dgvDatabase_SortCompare(object sender, DataGridViewSortCompareEventArgs e)
+        { // Override of the DataGridView's normal SortCompare. This version converts some of the fields to numbers before sorting them.
+            DataGridView dgv = (sender as DataGridView);
+            
+            if (e.CellValue1 is string)
+            {
+                string value1 = (e.CellValue1 ?? "").ToString();
+                string value2 = (e.CellValue2 ?? "").ToString();
+                e.SortResult = String.Compare(value1, value2);
+            }
+            else if (e.CellValue1 is int)
+            {
+                int value1 = (int)e.CellValue1;
+                int value2 = (int)e.CellValue2;
+                e.SortResult = CompareNumbers(value1, value2);
+            }
+            else
+            {
+                // Try to sort based on the cells in the current column as srtings.
+                string value1 = (e.CellValue1 ?? "").ToString();
+                string value2 = (e.CellValue2 ?? "").ToString();
+                e.SortResult = String.Compare(value1, value2);
+            }
+
+            e.Handled = true;
+        }
+
+        /// <summary>
+        /// Makes sure the string has one decimal separated with ".", and then pads the start of the string with spaces (" "s).
+        /// </summary>
+        private string Normalize(string s, int len)
+        {
+            s = s.Replace(',', '.');
+            if (!s.Contains('.'))
+                s += ".00";
+            return s.PadLeft(len + 3);
+        }
+
+        private int CompareNumbers(string value1, string value2)
+        {
+            int maxLen = Math.Max(value1.Length, value2.Length);
+            value1 = Normalize(value1, maxLen);
+            value2 = Normalize(value2, maxLen);
+            return String.Compare(value1, value2);
+        }
+
+        private int CompareNumbers(double value1, double value2)
+        {
+            return Math.Sign(value1.CompareTo(value2));
+        }
+
+        private int CompareNumbers(int value1, int value2)
+        {
+            return Math.Sign(value1.CompareTo(value2));
+        }
+        #endregion
 
         #region DataGridView ContextMenu RightClick
         private void dgvDatabase_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
@@ -242,7 +385,6 @@ namespace FeudalDatabaseWikiTool
                 }
             }
         }
-        #endregion
 
         private void cmsRightClickItemTemplate_Click(object sender, EventArgs e)
         { // http://stackoverflow.com/questions/4886327/determine-what-control-the-contextmenustrip-was-used-on
@@ -256,56 +398,7 @@ namespace FeudalDatabaseWikiTool
             if (feudalObject == null)
                 return;
 
-            List<FeudalRecipe> recipes = _recipes.Values.Where(x => x.ResultObjectTypeID == feudalObject.ID).ToList();
-
-            string infobox = $@"{{{{infobox item
-| name = {feudalObject.Name}
-| image = {feudalObject.FaceImage.Substring(feudalObject.FaceImage.LastIndexOf('\\') + 1)}
-| type = {(feudalObject.ParentID != 0 ? OnlyFirstLetterCapitalized(_objects_types[feudalObject.ParentID].Name) : "")}
-| container = {(feudalObject.IsContainer ? "1" : "")}
-| movable = {(feudalObject.IsMovableObject ? "1" : "")}
-| unmovable = {(feudalObject.IsUnmovableobject ? "1" : "")}
-| tool = {(feudalObject.IsTool ? "1" : "")}
-| device = {(feudalObject.IsDevice ? "1" : "")}
-| maxcontsize = {feudalObject.MaxContSize}
-| length = {feudalObject.Length}
-| maxstacksize = {feudalObject.MaxStackSize}
-| unitweight = {feudalObject.UnitWeight}
-| id = {feudalObject.ID}
-| parentid = {feudalObject.ParentID}
-| craftable = {(recipes.Any() ? "y" : "")}";
-
-            for (int r = 0; r < recipes.Count; r++)
-            {
-                string lineHeader = $"| r{r + 1}_";
-                List<FeudalRecipeRequirement> ingredRequirements = _recipe_requirements.Values.Where(x => x.RecipeID == recipes[r].ID && !_objects_types[x.MaterialObjectTypeID].IsTool && !_objects_types[x.MaterialObjectTypeID].IsDevice).ToList();
-                List<FeudalRecipeRequirement> equipRequirements = _recipe_requirements.Values.Where(x => x.RecipeID == recipes[r].ID && (_objects_types[x.MaterialObjectTypeID].IsTool || _objects_types[x.MaterialObjectTypeID].IsDevice)).ToList();
-                List<FeudalRecipeTool> toolRequirements = _recipe_tools.Values.Where(x => x.RecipeID == recipes[r].ID).ToList();
-                for (int ir = 0; ir < ingredRequirements.Count; ir++)
-                {
-                    infobox += $@"{Environment.NewLine}{lineHeader}ingred{ir + 1} = {OnlyFirstLetterCapitalized(_objects_types[ingredRequirements[ir].MaterialObjectTypeID].Name)}
-{lineHeader}regional{ir + 1} = {(ingredRequirements[ir].IsRegionItemRequired ? "1" : "")}
-{lineHeader}quantity{ir + 1} = {ingredRequirements[ir].Quantity}
-{lineHeader}influence{ir + 1} = {ingredRequirements[ir].Influence}";
-                }
-                for (int er = 0; er < equipRequirements.Count; er++)
-                {
-                    infobox += $@"{Environment.NewLine}{lineHeader}equip{er + 1} = {OnlyFirstLetterCapitalized(_objects_types[equipRequirements[er].MaterialObjectTypeID].Name)}
-{lineHeader}cost{er + 1} = {equipRequirements[er].Quantity}
-{lineHeader}impact{er + 1} = {equipRequirements[er].Influence}";
-                }
-                infobox += $@"{Environment.NewLine}{lineHeader}skill = {OnlyFirstLetterCapitalized(_skill_types[recipes[r].SkillTypeID].Name)}
-{lineHeader}minskilllevel = {recipes[r].SkillLvl}
-{lineHeader}skilldepends = {recipes[r].SkillDepends}
-{lineHeader}requiredtool = {string.Join(";", toolRequirements.Select(x => OnlyFirstLetterCapitalized(_objects_types[x.StartingToolID].Name)).ToList())}
-{lineHeader}blueprint = {(recipes[r].IsBlueprint ? "1" : "")}
-{lineHeader}quantity = {recipes[r].Quantity}
-{lineHeader}duration = ";
-            }
-
-            infobox += $"{Environment.NewLine}}}}}";
-
-            textBox1.Text = infobox;
+            ItemTemplate(feudalObject);
         }
 
         private void cmsRightClickBuildingTemplate_Click(object sender, EventArgs e)
@@ -319,115 +412,9 @@ namespace FeudalDatabaseWikiTool
             FeudalObject feudalObject = (currentRow.DataBoundItem as FeudalObject);
             if (feudalObject == null)
                 return;
-            
-            List<FeudalRecipe> recipes = _recipes.Values.Where(x => x.ResultObjectTypeID == feudalObject.ID).ToList();
 
-            string infobox = $@"{{{{infobox building
-| name = {feudalObject.Name}
-| image = {feudalObject.FaceImage.Substring(feudalObject.FaceImage.LastIndexOf('\\') + 1)}
-| type = {(feudalObject.ParentID != 0 ? OnlyFirstLetterCapitalized(_objects_types[feudalObject.ParentID].Name) : "")}
-| door = 
-| capacity = {feudalObject.MaxContSize}
-| animals = 
-| bindingpoints = 
-| rallypoints = 
-| constructionsize = 
-| id = {feudalObject.ID}
-| parentid = {feudalObject.ParentID}
-| craftable = {(recipes.Any() ? "y" : "")}";
-
-            for (int r = 0; r < recipes.Count; r++)
-            {
-                string lineHeader = $"| r{r + 1}_";
-                List<FeudalRecipeRequirement> ingredRequirements = _recipe_requirements.Values.Where(x => x.RecipeID == recipes[r].ID && !_objects_types[x.MaterialObjectTypeID].IsTool && !_objects_types[x.MaterialObjectTypeID].IsDevice).ToList();
-                List<FeudalRecipeRequirement> equipRequirements = _recipe_requirements.Values.Where(x => x.RecipeID == recipes[r].ID && (_objects_types[x.MaterialObjectTypeID].IsTool || _objects_types[x.MaterialObjectTypeID].IsDevice)).ToList();
-                List<FeudalRecipeTool> toolRequirements = _recipe_tools.Values.Where(x => x.RecipeID == recipes[r].ID).ToList();
-                for (int ir = 0; ir < ingredRequirements.Count; ir++)
-                {
-                    infobox += $@"{Environment.NewLine}{lineHeader}ingred{ir + 1} = {OnlyFirstLetterCapitalized(_objects_types[ingredRequirements[ir].MaterialObjectTypeID].Name)}
-{lineHeader}regional{ir + 1} = {(ingredRequirements[ir].IsRegionItemRequired ? "1" : "")}
-{lineHeader}quantity{ir + 1} = {ingredRequirements[ir].Quantity}
-{lineHeader}influence{ir + 1} = {ingredRequirements[ir].Influence}";
-                }
-                for (int er = 0; er < equipRequirements.Count; er++)
-                {
-                    infobox += $@"{Environment.NewLine}{lineHeader}equip{er + 1} = {OnlyFirstLetterCapitalized(_objects_types[equipRequirements[er].MaterialObjectTypeID].Name)}
-{lineHeader}cost{er + 1} = {equipRequirements[er].Quantity}
-{lineHeader}impact{er + 1} = {equipRequirements[er].Influence}";
-                }
-                infobox += $@"{Environment.NewLine}{lineHeader}skill = {OnlyFirstLetterCapitalized(_skill_types[recipes[r].SkillTypeID].Name)}
-{lineHeader}minskilllevel = {recipes[r].SkillLvl}
-{lineHeader}skilldepends = {recipes[r].SkillDepends}
-{lineHeader}requiredtool = {string.Join(";", toolRequirements.Select(x => OnlyFirstLetterCapitalized(_objects_types[x.StartingToolID].Name)).ToList())}
-{lineHeader}duration = ";
-            }
-
-            infobox += $"{Environment.NewLine}}}}}";
-
-            textBox1.Text = infobox;
-        }
-
-        #region DataGridView
-        private void dgvDatabase_SortCompare(object sender, DataGridViewSortCompareEventArgs e)
-        { // Override of the DataGridView's normal SortCompare. This version converts some of the fields to numbers before sorting them.
-            DataGridView dgv = (sender as DataGridView);
-            
-            if (e.CellValue1 is string)
-            {
-                string value1 = (e.CellValue1 ?? "").ToString();
-                string value2 = (e.CellValue2 ?? "").ToString();
-                e.SortResult = String.Compare(value1, value2);
-            }
-            else if (e.CellValue1 is int)
-            {
-                int value1 = (int)e.CellValue1;
-                int value2 = (int)e.CellValue2;
-                e.SortResult = CompareNumbers(value1, value2);
-            }
-            else
-            {
-                // Try to sort based on the cells in the current column as srtings.
-                string value1 = (e.CellValue1 ?? "").ToString();
-                string value2 = (e.CellValue2 ?? "").ToString();
-                e.SortResult = String.Compare(value1, value2);
-            }
-
-            e.Handled = true;
-        }
-
-        /// <summary>
-        /// Makes sure the string has one decimal separated with ".", and then pads the start of the string with spaces (" "s).
-        /// </summary>
-        private string Normalize(string s, int len)
-        {
-            s = s.Replace(',', '.');
-            if (!s.Contains('.'))
-                s += ".00";
-            return s.PadLeft(len + 3);
-        }
-
-        private int CompareNumbers(string value1, string value2)
-        {
-            int maxLen = Math.Max(value1.Length, value2.Length);
-            value1 = Normalize(value1, maxLen);
-            value2 = Normalize(value2, maxLen);
-            return String.Compare(value1, value2);
-        }
-
-        private int CompareNumbers(double value1, double value2)
-        {
-            return Math.Sign(value1.CompareTo(value2));
-        }
-
-        private int CompareNumbers(int value1, int value2)
-        {
-            return Math.Sign(value1.CompareTo(value2));
+            BuildingTemplate(feudalObject);
         }
         #endregion
-
-        private string OnlyFirstLetterCapitalized(string s)
-        {
-            return $"{s.Remove(1).ToUpper()}{s.Substring(1).ToLower()}";
-        }
     }
 }
