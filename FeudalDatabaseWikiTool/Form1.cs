@@ -156,6 +156,7 @@ namespace FeudalDatabaseWikiTool
 | tool = {(feudalObject.IsTool ? "1" : "")}
 | device = {(feudalObject.IsDevice ? "1" : "")}
 | maxcontsize = {feudalObject.MaxContSize}
+| capacity = {feudalObject.MaxContSize / 1000f}
 | length = {feudalObject.Length}
 | maxstacksize = {feudalObject.MaxStackSize}
 | unitweight = {feudalObject.UnitWeight}
@@ -205,7 +206,9 @@ namespace FeudalDatabaseWikiTool
 | image = {feudalObject.FaceImage.Substring(feudalObject.FaceImage.LastIndexOf('\\') + 1)}
 | type = {(feudalObject.ParentID != 0 ? OnlyFirstLetterCapitalized(_objects_types[feudalObject.ParentID].Name) : "")}
 | door = 
-| capacity = {feudalObject.MaxContSize}
+| maxcontsize = {feudalObject.MaxContSize}
+| capacity = {feudalObject.MaxContSize / 1000f}
+| length = {feudalObject.Length}
 | animals = 
 | bindingpoints = 
 | rallypoints = 
